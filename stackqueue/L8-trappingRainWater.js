@@ -1,53 +1,98 @@
- let trap = [0,1,0,2,1,0,1,3,2,1,2,1]
+/**
+ * Trapping Rain Water
+ * 1 - brute
+ * 2 - better @see {@link better}
+ * 3 - optimal @see {@link optimal}
+ * @see {@link https://leetcode.com/problems/trapping-rain-water/description/}
+ */
  
-//  BETTER ========================================
-// creating preFix max array
-let total = 0
-let preMax = Array(trap.length)
-let pMax = Number.MIN_SAFE_INTEGER
-// FORWARD LOOP
-trap.forEach((e,i) => {
-    if(e > pMax){
-        pMax = e
-    }
-    preMax[i] = pMax
-})
-
-// creating sufFix max array
-let sufMax = Array(trap.length)
-let sMax = Number.MIN_SAFE_INTEGER
-
-// BACKWARD LOOP
-for(let i = trap.length-1; i>=0; i--){
-    if(trap[i]>sMax){
-        sMax = trap[i]
-    }
-    sufMax[i] = sMax
+ let input = [0,1,0,2,1,0,1,3,2,1,2,1]
+//  3                 _
+//  2          _        _   _
+//  1      _     _   _    _   _
+//  0    _   _     _  
+/**
+ * 
+ * @param {number[]} arr 
+ * @returns {number[]}
+ */
+ function nge(arr){
+     let preMax = Array(arr.length).fill(-1)
+     let pMax = Number.MIN_SAFE_INTEGER
+     arr.forEach((e,i) => {
+         if(e > pMax){
+            pMax = e
+        }
+        preMax[i] = pMax
+    })
+    return preMax
 }
 
-// FINDING TOTAL
- for (let i = 0; i < trap.length; i++) {
-     let rightmax = sufMax[i];
-     let leftMax = preMax[i]
- if(trap[i] < leftMax && trap[i] < rightmax ){
-     total += Math.min(leftMax,rightmax) - trap[i]
+/**
+ * 
+ * @param {number[]} arr 
+ * @returns {number[]}
+ */
+function pge(arr){
+    let sufMax = Array(arr.length)
+    let sMax = Number.MIN_SAFE_INTEGER
+    for(let i = arr.length-1; i>=0; i--){
+        if(arr[i]>sMax){
+            sMax = arr[i]
+        }
+        sufMax[i] = sMax
     }
+    return sufMax
+    
 }
-console.log(total);
-// time complexity O(3n) , space complexity 2n.
-//  BETTER ========================================
 
-// OPTIMAL ========================================
-better(trap)
-// time complexity O(n) , space complexity 5.
-// better
-function better(tr){
-    let leftMax = 0
+/**
+ * BETTER APPROACH
+ * @param {number[]} arr 
+ * @returns {number[]}
+ * time complexity - O(3n)
+ * space complexity - 2n
+ */
+function better(arr){
+    let total = 0
+    let rightmax = nge(arr) 
+    let leftMax = pge(arr)
+    for (let i = 0; i < arr.length; i++) {
+        if(arr[i] < leftMax[i] && arr[i] < rightmax[i] ){
+            total += Math.min(leftMax[i],rightmax[i]) - arr[i]
+        }
+    }
+    console.log(total);
+    return total
+
+}
+
+
+/**
+ * OPTIMAL APPROACH
+ * @param {number[]} tr 
+ * @returns {number[]}
+ * time complexity O(n)
+ * space complexity 5.
+ */
+
+function optimal(tr){
+    /**
+     * @property {number} leftMax
+     * @property {number} rightmax
+     * @property {number} total
+     * @property {number} r
+     * @property {number} l
+     */
+    let leftMax = 0 
     let rightmax = 0
     let total = 0
     let r = tr.length-1
-    let l = 0
+    let l = 0 
     while(l < r){
+        /**
+         * this loop chexk the valid 
+         */
         if(tr[l] <= tr[r]){
             if(leftMax > tr[l]){
                 total += leftMax - tr[l]
@@ -66,4 +111,6 @@ function better(tr){
     }
     console.log(total);
 }
-// OPTIMAL ========================================
+
+better(input)
+optimal(input)
