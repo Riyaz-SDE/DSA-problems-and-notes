@@ -10,16 +10,16 @@ function find(nums,x){
         let mid = Math.floor((low+high)/2)
         if(nums[mid] === x){
             return mid
-        }else if(nums[high] >= target){
+        }else if(x <= nums[high] ){
             //left sorted portion
-            if(nums[high] >= x && nums[mid]<= x){
+            if(nums[mid]<= x && x <= nums[high]  ){
                 low = mid + 1
             }else{
                 high = mid - 1
             }
         }else{
             // right sorted portion
-            if(nums[mid] >= x && nums[low] <= x){
+            if(nums[low] <= x && x<= nums[mid] ){
                 high = mid - 1
             } else{
                 low = mid + 1
@@ -33,5 +33,6 @@ console.log(rotateK([1,2,3,4,5],2));
 console.log(find([3,4,5,1,2],4));
 console.log(find([1,2,3,4,5,6,-2,-1,0],4));
 console.log(find([1,2,3,4,5,6,7,8,9,-2,-1,0],9));
+console.log(find([5,6,7,1,2,3,4],7)); // this breaks the code check(demo.js)
 
 
